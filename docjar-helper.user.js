@@ -3,9 +3,30 @@
 // @namespace   com.docjar-helper
 // @description hide line numbers for docjar
 // @include     http://www.docjar.com/html/*.java.html*
-// @version     1
+// @version     1.1
 // @grant       none
 // ==/UserScript==
+
+function getCookie(c_name) {
+	if (document.cookie.length > 0) {
+		c_start = document.cookie.indexOf(c_name + "=");
+		if (c_start != -1) { 
+			c_start = c_start + c_name.length + 1 ;
+			c_end = document.cookie.indexOf(";", c_start);
+			if (c_end == -1) {
+				c_end = document.cookie.length;
+			}
+			return unescape(document.cookie.substring(c_start, c_end));
+		} 
+	}
+	return "";
+}
+
+function setCookie (c_name, value, expiresecs) {
+	var exdate = new Date();
+	exdate.setSeconds(exdate.getSeconds() + expiresecs);
+	document.cookie = c_name + "=" + escape(value) + ((expiresecs == null) ? "" : ";expires=" + exdate.toGMTString());
+}
 
 var pre = document.getElementsByTagName("pre")[0];
 
@@ -38,6 +59,7 @@ function hideLineNum() {
 	showArchor.href = "#show-line-numbers";
 	hideArchor.removeAttribute("href");
 	location.hash = "hide-line-numbers";
+	setCookie("line-number-display", "hidden");
 }
 
 function showLineNum() {
@@ -47,10 +69,15 @@ function showLineNum() {
 	hideArchor.href = "#hide-line-numbers";
 	showArchor.removeAttribute("href");
 	location.hash = "show-line-numbers";
+	setCookie("line-number-display", "onshow");
 }
 
-if (location.hash !== "#show-line-numbers") {
+if (location.hash == "#hide-line-numbers") {
 	hideLineNum();
-} else {
+} else if (location.hash == "#show-line-numbers") {
 	showLineNum();
+} else if (getCookie("line-number-display") == "onshow") {
+	showLineNum();
+} else if (getCookie("line-number-display") == "hidden") {
+	hideLineNum();
 }
