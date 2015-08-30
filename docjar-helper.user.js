@@ -3,7 +3,7 @@
 // @namespace   com.docjar-helper
 // @description hide line numbers for docjar
 // @include     http://www.docjar.com/html/*.java.html*
-// @version     1.1
+// @version     1.1.1
 // @grant       none
 // ==/UserScript==
 
@@ -80,4 +80,6 @@ if (location.hash == "#hide-line-numbers") {
 	showLineNum();
 } else if (getCookie("line-number-display") == "hidden") {
 	hideLineNum();
+} else {
+	showLineNum();
 }
